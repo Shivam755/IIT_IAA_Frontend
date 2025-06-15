@@ -1,6 +1,8 @@
 'use client';
 import React, { useState } from 'react'
-import CourseCreateDTO from '../models/CourseCreateDTO';
+import CourseCreateDTO from '@/app/models/CourseCreateDTO';
+import { CreateCourse } from '@/app/services/CourseService';
+import { useCourses } from '@/app/context/CourseContext';
 
 const CreateCourseForm = () => {
   const [formData, setFormData] = useState<CourseCreateDTO>({
@@ -9,8 +11,7 @@ const CreateCourseForm = () => {
     description: ''
   });
 
-  const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState('');
+  const { refetchCourses } = useCourses();
 
   const handleChange  = (e:React.ChangeEvent<HTMLInputElement>) => {
       setFormData({
@@ -21,25 +22,20 @@ const CreateCourseForm = () => {
 
   const handleSubmit = async (e:React.FormEvent) =>{
      e.preventDefault();
-    setLoading(true);
-    setMessage('');
-    let baseurl = process.env.NEXT_PUBLIC_API_URL;
-    if (!baseurl){
-      console.log("Base api url is not set! Pleaseset an environment variable with name NEXT_PUBLIC_API_URL")
-    }
-    const res = await fetch(baseurl+'/api/courses/', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(formData),
-    });
-
-    const data = await res.json();
-    setLoading(false);
-
-    if (res.ok) {
-      setMessage('User created!');
+    // making the api call
+    let res = await CreateCourse(formData);
+    console.log(`res: ${res}`);
+    if (res === undefined) {
+      // clearing fields
+      setFormData({
+        title: '',
+        course_code: '',
+        description: ''
+      });
+      // refreshing 
+      refetchCourses();
     } else {
-      setMessage(`Error: ${data.error || 'Something went wrong'}`);
+      console.log(`Error: ${res.error || 'Something went wrong'}`);
     }
   }
   return (
@@ -55,7 +51,7 @@ const CreateCourseForm = () => {
         <label className="Label">Description: </label>
         <input className='Text' type="Text" name="description" value={formData.description} onChange={handleChange} required/>
         <br/>
-        <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded' onClick={()=>console.log('hello')}>Add Course</button>
+        <button type='submit' className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded'>Add Course</button>
 
 
     </form>
