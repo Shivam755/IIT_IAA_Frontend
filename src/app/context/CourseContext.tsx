@@ -1,6 +1,13 @@
-'use client';
-import { createContext, useContext, useState, ReactNode, useEffect } from "react";
-import { fetchAllCourses } from '@/app/services/CourseService';
+"use client";
+import {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useEffect,
+} from "react";
+import { fetchAllCourses } from "@/app/services/CourseService";
+import CourseViewDTO from "@/app/models/CourseViewDTO";
 
 const CoursesContext = createContext<
   | {
@@ -20,13 +27,13 @@ export const CoursesProvider = ({ children }: CouresesProviderProps) => {
   const refetchCourses = async () => {
     let data = await fetchAllCourses();
     setCourses(data);
-  }
+  };
 
   useEffect(() => {
-      fetchAllCourses().then((data) =>{
-        setCourses(data);
-      });
-    }, []);
+    fetchAllCourses().then((data) => {
+      setCourses(data);
+    });
+  }, []);
   return (
     <CoursesContext.Provider value={{ courses, setCourses, refetchCourses }}>
       {children}

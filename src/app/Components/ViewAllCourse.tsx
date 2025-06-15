@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
 import { useCourses } from '@/app/context/CourseContext';
-import DeleteCourseButton from './DeleteCourseButton';
+import DeleteCourseButton from '@/app/components/DeleteCourseButton';
 
 const ViewAllCourse = () => {
     let { courses } = useCourses();

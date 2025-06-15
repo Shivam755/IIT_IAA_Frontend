@@ -1,4 +1,4 @@
-interface CourseViewDTO{
+export default interface CourseViewDTO{
     id: number,
     title: string,
     course_code: string,
