@@ -10,10 +10,12 @@ RUN \
   else echo "Lockfile not found." && exit 1; \
   fi
 
-COPY . .
+COPY entrypoint.sh /frontend/entrypoint.sh
 
-RUN chmod +x entrypoint.sh
+RUN chmod +x /frontend/entrypoint.sh
+
+COPY . .
 
 EXPOSE 3000
 
-ENTRYPOINT [ "./entrypoint.sh" ]
+ENTRYPOINT [ "/frontend/entrypoint.sh" ]
