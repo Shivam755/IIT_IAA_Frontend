@@ -1,18 +1,29 @@
 import CourseCreateDTO from "@/app/models/CourseCreateDTO";
+import CourseViewDTO from "@/app/models/CourseViewDTO";
+import Response from "@/app/models/Response";
 
-export const CreateCourse = async (course: CourseCreateDTO) => {
+export const CreateCourse = async (course: CourseCreateDTO):Promise<Response<(CourseViewDTO|undefined)>> => {
   let baseurl = getBaseUrl();
-  const res = await fetch(baseurl + "/api/courses/", {
+  const result = await fetch(baseurl + "/api/courses/", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(course),
   });
-  let data = await res.json();
-  if (res.ok) {
-    return undefined;
+  let data:CourseViewDTO = await result.json();
+  let response:Response<(CourseViewDTO|undefined)> = {
+    success:true,
+    message:"",
+    data:undefined
+  };
+  if (result.ok) {
+    response.success=true;
+    response.data = data;
   } else {
-    return data;
+    response.success=false;
+    response.message=`Create call failed with status: ${result.status}`;
   }
+
+  return response;
 };
 
 export const fetchAllCourses = async () => {
@@ -29,17 +40,28 @@ export const fetchAllCourses = async () => {
   }
 };
 
-export const deleteCourse = async (id: number) => {
+export const deleteCourse = async (id: number):Promise<Response<undefined>> => {
   let baseurl = getBaseUrl();
+  let response:Response<undefined> = {
+    success:true,
+    message:"",
+    data:undefined
+  };
+
+  // making the api call
   let res = await fetch(`${baseurl}/api/courses/${id}/`, {
     method: "DELETE",
   });
 
+  // setting response
   if (res.ok) {
-    console.log(`Course deleted with Id: ${id}`);
+    response.success = true;
+    response.message = `Course deleted with Id: ${id}`;
   } else {
-    console.log("There was some issue while deleting course!");
+    response.success = false;
+    response.message = "There was some issue while deleting course!";
   }
+  return response;
 };
 
 export const getBaseUrl = () => {

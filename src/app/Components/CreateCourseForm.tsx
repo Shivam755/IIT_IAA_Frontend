@@ -1,8 +1,11 @@
 'use client';
-import React, { useState } from 'react'
+import React, { useState } from 'react';
+import { toast } from 'sonner';
 import CourseCreateDTO from '@/app/models/CourseCreateDTO';
 import { CreateCourse } from '@/app/services/CourseService';
 import { useCourses } from '@/app/context/CourseContext';
+import CourseViewDTO from '@/app/models/CourseViewDTO';
+import Response from "@/app/models/Response";
 
 const CreateCourseForm = () => {
   const [formData, setFormData] = useState<CourseCreateDTO>({
@@ -20,23 +23,29 @@ const CreateCourseForm = () => {
       });
   }
 
-  const handleSubmit = async (e:React.FormEvent) =>{
+  const handleSubmit = (e:React.FormEvent) =>{
      e.preventDefault();
     // making the api call
-    let res = await CreateCourse(formData);
-    console.log(`res: ${res}`);
-    if (res === undefined) {
-      // clearing fields
-      setFormData({
-        title: '',
-        course_code: '',
-        description: ''
-      });
-      // refreshing 
-      refetchCourses();
-    } else {
-      console.log(`Error: ${res.error || 'Something went wrong'}`);
-    }
+    let res = CreateCourse(formData);
+    toast.promise(res, {
+      loading: "Saving Details...",
+      error: 'Something went wrong while saving course Details!',
+      success: (data: Response<(CourseViewDTO|undefined)>) => {
+        if (data.success){
+          // clearing fields
+          setFormData({
+            title: '',
+            course_code: '',
+            description: ''
+          });
+          // refreshing 
+          refetchCourses();
+          return "Course saved successfully!";
+        }else{
+          return data.message;
+        }
+      }
+    });
   }
   return (
     <form onSubmit={handleSubmit} className="space-y-4">

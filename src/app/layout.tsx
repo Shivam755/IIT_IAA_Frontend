@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { CoursesProvider } from '@/app/context/CourseContext';
 import { InstancesProvider } from '@/app/context/InstanceContext';
+import { Toaster } from 'sonner';
+import Tabs from "./components/Tabs";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -31,7 +33,21 @@ export default function RootLayout({
       >
         <CoursesProvider>
           <InstancesProvider>
+            <Tabs />
             {children}
+            <Toaster toastOptions={{
+              classNames: {
+                success: "bg-green-600 text-white",
+                error: "bg-red-600 text-white",
+                default: "bg-neutral-800 text-white",
+                loading: "bg-black-400 text-white"
+              },
+
+              style: { borderRadius: 8, fontSize: 14 },
+
+              // Optional: per-type duration override
+              duration: 3000,
+            }}/>
           </InstancesProvider>
         </CoursesProvider>
       </body>
