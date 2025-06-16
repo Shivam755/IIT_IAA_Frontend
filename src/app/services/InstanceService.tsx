@@ -1,6 +1,5 @@
 import { getBaseUrl } from "@/app/services/CourseService";
 import InstanceCreateDTO from "@/app/models/InstanceCreateDTO";
-import InstanceRequest from "@/app/models/InstanceRequest";
 
 export const CreateInstance = async (course: InstanceCreateDTO) => {
   let baseurl = getBaseUrl();
@@ -20,11 +19,15 @@ export const CreateInstance = async (course: InstanceCreateDTO) => {
   }
 };
 
-export const fetchAllInstances = async ({ year, semester }: InstanceRequest) => {
+export const fetchAllInstances = async ({ year, semester, course_id  }: InstanceCreateDTO) => {
   let baseurl = getBaseUrl();
 
+  let fetchUrl = `${baseurl}/api/instances/${year}/${semester}/`;
+  if (course_id){
+    fetchUrl += `${course_id}/`
+  }
   // making the api call
-  let res = await fetch(`${baseurl}/api/instances/${year}/${semester}/`, {
+  let res = await fetch(fetchUrl, {
     method: "GET",
   });
 
@@ -37,7 +40,7 @@ export const fetchAllInstances = async ({ year, semester }: InstanceRequest) => 
   }
 };
 
-export const deleteInstance = async({ year, semester, course_id } : InstanceRequest) => {
+export const deleteInstance = async({ year, semester, course_id } : InstanceCreateDTO) => {
     let baseurl = getBaseUrl();
 
     // making the api call
