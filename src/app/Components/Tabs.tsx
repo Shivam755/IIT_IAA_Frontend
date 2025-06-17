@@ -1,35 +1,37 @@
-'use client';
-import { usePathname, useRouter } from 'next/navigation';
+"use client";
+import { usePathname, useRouter } from "next/navigation";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-const Tabs = () => {
-    const router = useRouter();
+const CourseTabs = () => {
+  const router = useRouter();
   const pathname = usePathname();
 
   const tabs = [
-    { name: 'Course', path: '' },
-    { name: 'Instance', path: '/instance' },
+    { name: "Course", path: "" },
+    { name: "Instance", path: "instance" },
   ];
+
+  // Extract tab value from pathname
+  const currentTab = pathname.split("/").pop() || "";
+
+  const handleTabChange = (tab: string) => {
+    router.push(`/${tab}`);
+  };
   return (
-    <div className="flex border-b border-gray-300">
-      {tabs.map((tab) => {
-        const isActive = pathname === tab.path;
-
-        return (
-          <button
-            key={tab.path}
-            onClick={() => router.push(tab.path)}
-            className={`px-4 py-2 text-sm font-medium border-b-2 transition ${
-              isActive
-                ? 'border-blue-600 text-blue-600'
-                : 'border-transparent text-gray-500 hover:text-blue-600'
-            }`}
-          >
-            {tab.name}
-          </button>
-        );
-      })}
+    <div className="flex items-center gap-2">
+      <Tabs
+        value={currentTab}
+        onValueChange={handleTabChange}
+        className="flex gap-2"
+      >
+        <TabsList>
+          {tabs.map((tab) => {
+            return <TabsTrigger key={tab.name} id={tab.name} value={tab.path}>{tab.name}</TabsTrigger>;
+          })}
+        </TabsList>
+      </Tabs>
     </div>
-  )
-}
+  );
+};
 
-export default Tabs
+export default CourseTabs;

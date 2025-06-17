@@ -2,25 +2,27 @@ import CourseCreateDTO from "@/app/models/CourseCreateDTO";
 import CourseViewDTO from "@/app/models/CourseViewDTO";
 import Response from "@/app/models/Response";
 
-export const CreateCourse = async (course: CourseCreateDTO):Promise<Response<(CourseViewDTO|undefined)>> => {
+export const CreateCourse = async (
+  course: CourseCreateDTO
+): Promise<Response<CourseViewDTO | undefined>> => {
   let baseurl = getBaseUrl();
   const result = await fetch(baseurl + "/api/courses/", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(course),
   });
-  let data:CourseViewDTO = await result.json();
-  let response:Response<(CourseViewDTO|undefined)> = {
-    success:true,
-    message:"",
-    data:undefined
+  let data: CourseViewDTO = await result.json();
+  let response: Response<CourseViewDTO | undefined> = {
+    success: true,
+    message: "",
+    data: undefined,
   };
   if (result.ok) {
-    response.success=true;
+    response.success = true;
     response.data = data;
   } else {
-    response.success=false;
-    response.message=`Create call failed with status: ${result.statusText}`;
+    response.success = false;
+    response.message = `Create call failed with status: ${result.statusText}`;
   }
 
   return response;
@@ -40,12 +42,12 @@ export const fetchAllCourses = async () => {
   }
 };
 
-export const deleteCourse = async (id: number):Promise<Response<void>> => {
+export const deleteCourse = async (id: number): Promise<Response<void>> => {
   let baseurl = getBaseUrl();
-  let response:Response<void> = {
-    success:true,
-    message:"",
-    data:undefined
+  let response: Response<void> = {
+    success: true,
+    message: "",
+    data: undefined,
   };
 
   // making the api call

@@ -5,7 +5,7 @@ export default function Home() {
   return (
     <div>
       <CreateCourseForm />
-      <ViewAllCourse/>
+      <ViewAllCourse />
     </div>
   );
 }

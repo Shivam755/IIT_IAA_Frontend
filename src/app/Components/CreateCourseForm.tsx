@@ -38,13 +38,13 @@ const CreateCourseForm = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (formData.title === undefined || formData.title === ""){
+    if (formData.title === undefined || formData.title === "") {
       return toast.error("Course Name cannot be empty");
     }
-    if (formData.course_code === undefined || formData.course_code === ""){
+    if (formData.course_code === undefined || formData.course_code === "") {
       return toast.error("Course Code cannot be empty");
     }
-    if (formData.description === undefined || formData.description === ""){
+    if (formData.description === undefined || formData.description === "") {
       return toast.error("Description cannot be empty");
     }
     // making the api call
@@ -72,18 +72,20 @@ const CreateCourseForm = () => {
   };
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-        <div className="flex flex-end">
-          <Button variant="outline" onClick={()=>setOpen(true)}>Add Course</Button>
-        </div>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>Create Course</DialogTitle>
-            <DialogDescription>
-              Add details of the course you want to create. Click save when
-              you&apos;re done.
-            </DialogDescription>
-          </DialogHeader>
-          <form>
+      <div className="flex flex-end">
+        <Button variant="outline" onClick={() => setOpen(true)}>
+          Add Course
+        </Button>
+      </div>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Create Course</DialogTitle>
+          <DialogDescription>
+            Add details of the course you want to create. Click save when
+            you&apos;re done.
+          </DialogDescription>
+        </DialogHeader>
+        <form>
           <div className="grid gap-4">
             <div className="grid gap-3">
               <Label htmlFor="title">Course Name</Label>
@@ -116,18 +118,16 @@ const CreateCourseForm = () => {
               />
             </div>
           </div>
-          </form>
-          <DialogFooter>
-            <DialogClose asChild>
-              <Button variant="outline">Cancel</Button>
-            </DialogClose>
-            <Button type="submit" onClick={handleSubmit}>
-              Save changes
-            </Button>
-          </DialogFooter>
-          
-        </DialogContent>
-      
+        </form>
+        <DialogFooter>
+          <DialogClose asChild>
+            <Button variant="outline">Cancel</Button>
+          </DialogClose>
+          <Button type="submit" onClick={handleSubmit}>
+            Save changes
+          </Button>
+        </DialogFooter>
+      </DialogContent>
     </Dialog>
   );
 };

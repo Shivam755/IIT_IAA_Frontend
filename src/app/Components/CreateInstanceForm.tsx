@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { toast } from "sonner";
-import { Check, ChevronsUpDown } from "lucide-react";
+import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   Dialog,
@@ -53,48 +53,52 @@ const CreateInstanceForm = () => {
       [e.target.name]: e.target.value,
     });
   };
-  const refreshCourses = async (e:React.FormEvent) =>{
+  const refreshCourses = async (e: React.FormEvent) => {
     e.preventDefault();
     refetchCourses();
-  }
+  };
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const yearRegex = /^(19|20)\d{2}$/;
-    if (formData.course_id === undefined || formData.course_id === 0){
+    if (formData.course_id === undefined || formData.course_id === 0) {
       return toast.error("Please select a course");
     }
-    if (formData.semester === undefined || formData.semester === 0){
+    if (formData.semester === undefined || formData.semester === 0) {
       return toast.error("Please select a semester greater than 0");
     }
-    if (formData.year === undefined || formData.year === "" || !yearRegex.test(formData.year)){
+    if (
+      formData.year === undefined ||
+      formData.year === "" ||
+      !yearRegex.test(formData.year)
+    ) {
       return toast.error("Please enter a year between 1900 and 2099");
     }
     // making the api call
     let result = CreateInstance(formData);
-    toast.promise(result,{
+    toast.promise(result, {
       loading: "Saving Instance detail...",
       error: "There was some issue while saving the instance!",
       success: (data: Response<InstanceViewDTO | undefined>) => {
         if (data.success) {
-      // clearing fields
-      setFormData({
-        course_id: 0,
-        year: "",
-        semester: 0,
-      });
-      setDialogOpen(false);
-      return "Course Instance saved successfully!";
-    } else {
-      return data.message;
-    }
-      }
-    })
+          // clearing fields
+          setFormData({
+            course_id: 0,
+            year: "",
+            semester: 0,
+          });
+          setDialogOpen(false);
+          return "Course Instance saved successfully!";
+        } else {
+          return data.message;
+        }
+      },
+    });
   };
   return (
     <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-      <div className="w-full flex flex-end">
+      <div className="flex items-center gap-4">
         <Button variant="outline" onClick={() => setDialogOpen(true)}>
-          Add Course
+          Add Course Instance
         </Button>
       </div>
       <DialogContent className="sm:max-w-[425px]">
@@ -105,12 +109,12 @@ const CreateInstanceForm = () => {
             when you&apos;re done.
           </DialogDescription>
         </DialogHeader>
-          <div className="grid gap-4">
-            <div className="grid gap-3">
-              <Label htmlFor="title">Course</Label>
-              <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
-                <PopoverTrigger asChild>
-                  <div className="w-full flex">
+        <div className="grid gap-4">
+          <div className="grid gap-3">
+            <Label htmlFor="title">Course</Label>
+            <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
+              <PopoverTrigger asChild>
+                <div className="w-full flex">
                   <Button
                     variant="outline"
                     role="combobox"
@@ -123,68 +127,70 @@ const CreateInstanceForm = () => {
                         )?.title
                       : "Select course..."}
                   </Button>
-                  <Button className="flex-1 flex-end" onClick={refreshCourses}>Refresh</Button>
-                  </div>
-                </PopoverTrigger>
-                <PopoverContent>
-                  <Command>
-                    <CommandInput
-                      placeholder="Search Courses..."
-                      className="h-9"
-                    />
-                    <CommandList>
-                      <CommandEmpty>No courses found.</CommandEmpty>
-                      <CommandGroup>
-                        {courses.map((course) => (
-                          <CommandItem
-                            key={course.id}
-                            value={course.id.toString()}
-                            onSelect={(currentValue) => {
-                              formData.course_id =
-                                Number(currentValue) === formData.course_id
-                                  ? 0
-                                  : Number(currentValue);
-                              setPopoverOpen(false);
-                            }}
-                          >
-                            {course.title}
-                            <Check
-                              className={cn(
-                                "ml-auto",
-                                formData.course_id === course.id
-                                  ? "opacity-100"
-                                  : "opacity-0"
-                              )}
-                            />
-                          </CommandItem>
-                        ))}
-                      </CommandGroup>
-                    </CommandList>
-                  </Command>
-                </PopoverContent>
-              </Popover>
-            </div>
-            <div className="grid gap-3">
-              <Label htmlFor="year">Year</Label>
-              <Input
-                id="year"
-                name="year"
-                value={formData.year}
-                onChange={handleChange}
-                required
-              />
-            </div>
-            <div className="grid gap-3">
-              <Label htmlFor="semester">Semester</Label>
-              <Input
-                id="semester"
-                name="semester"
-                value={formData.semester}
-                onChange={handleChange}
-                required
-              />
-            </div>
+                  <Button className="flex-1 flex-end" onClick={refreshCourses}>
+                    Refresh
+                  </Button>
+                </div>
+              </PopoverTrigger>
+              <PopoverContent>
+                <Command>
+                  <CommandInput
+                    placeholder="Search Courses..."
+                    className="h-9"
+                  />
+                  <CommandList>
+                    <CommandEmpty>No courses found.</CommandEmpty>
+                    <CommandGroup>
+                      {courses.map((course) => (
+                        <CommandItem
+                          key={course.id}
+                          value={course.id.toString()}
+                          onSelect={(currentValue) => {
+                            formData.course_id =
+                              Number(currentValue) === formData.course_id
+                                ? 0
+                                : Number(currentValue);
+                            setPopoverOpen(false);
+                          }}
+                        >
+                          {course.title}
+                          <Check
+                            className={cn(
+                              "ml-auto",
+                              formData.course_id === course.id
+                                ? "opacity-100"
+                                : "opacity-0"
+                            )}
+                          />
+                        </CommandItem>
+                      ))}
+                    </CommandGroup>
+                  </CommandList>
+                </Command>
+              </PopoverContent>
+            </Popover>
           </div>
+          <div className="grid gap-3">
+            <Label htmlFor="year">Year</Label>
+            <Input
+              id="year"
+              name="year"
+              value={formData.year}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className="grid gap-3">
+            <Label htmlFor="semester">Semester</Label>
+            <Input
+              id="semester"
+              name="semester"
+              value={formData.semester}
+              onChange={handleChange}
+              required
+            />
+          </div>
+        </div>
         <DialogFooter>
           <DialogClose asChild>
             <Button variant="outline">Cancel</Button>
