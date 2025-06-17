@@ -20,7 +20,7 @@ export const CreateCourse = async (course: CourseCreateDTO):Promise<Response<(Co
     response.data = data;
   } else {
     response.success=false;
-    response.message=`Create call failed with status: ${result.status}`;
+    response.message=`Create call failed with status: ${result.statusText}`;
   }
 
   return response;
@@ -40,9 +40,9 @@ export const fetchAllCourses = async () => {
   }
 };
 
-export const deleteCourse = async (id: number):Promise<Response<undefined>> => {
+export const deleteCourse = async (id: number):Promise<Response<void>> => {
   let baseurl = getBaseUrl();
-  let response:Response<undefined> = {
+  let response:Response<void> = {
     success:true,
     message:"",
     data:undefined

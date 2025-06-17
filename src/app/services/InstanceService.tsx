@@ -1,9 +1,15 @@
 import { getBaseUrl } from "@/app/services/CourseService";
 import InstanceCreateDTO from "@/app/models/InstanceCreateDTO";
+import Response from "@/app/models/Response";
+import InstanceViewDTO from "@/app/models/InstanceViewDTO";
 
-export const CreateInstance = async (course: InstanceCreateDTO) => {
+export const CreateInstance = async (course: InstanceCreateDTO):Promise<Response<(InstanceViewDTO|undefined)>> => {
   let baseurl = getBaseUrl();
-
+  let response:Response<(InstanceViewDTO|undefined)> = {
+      success:true,
+      message:"",
+      data:undefined
+    };
   // making api call
   const res = await fetch(baseurl + "/api/instances/", {
     method: "POST",
@@ -13,10 +19,14 @@ export const CreateInstance = async (course: InstanceCreateDTO) => {
   let data = await res.json();
   // returning data based on the response code
   if (res.ok) {
-    return undefined;
+    response.success = true
+    response.data = data;
   } else {
-    return data;
+    response.success = false;
+    response.message = "There was some issue while saving instance";
+    console.log(`Create call failed with status: ${res.statusText}`)
   }
+  return response;
 };
 
 export const fetchAllInstances = async ({ year, semester, course_id  }: InstanceCreateDTO) => {
@@ -40,8 +50,13 @@ export const fetchAllInstances = async ({ year, semester, course_id  }: Instance
   }
 };
 
-export const deleteInstance = async({ year, semester, course_id } : InstanceCreateDTO) => {
+export const deleteInstance = async({ year, semester, course_id } : InstanceCreateDTO):Promise<Response<void>> => {
     let baseurl = getBaseUrl();
+    let response:Response<void> = {
+      success:true,
+      message:"",
+      data:undefined
+    };
 
     // making the api call
     let res = await fetch(`${baseurl}/api/instances/${year}/${semester}/${course_id}/`, {
@@ -50,8 +65,12 @@ export const deleteInstance = async({ year, semester, course_id } : InstanceCrea
 
     // logging data based on the response code
     if (res.ok) {
-        console.log(`Instance deleted successfully!`);
+      response.success = true;
+      response.message = `Instance deleted successfully!`;
     } else {
-        console.log("There was some issue while deleting course!");
+      response.success = false;
+      response.message = "There was some issue while deleting Instance!";
+        console.log(`Delete call failed with status: ${res.statusText}`);
     }
+    return response;
 }
