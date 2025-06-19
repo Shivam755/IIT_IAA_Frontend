@@ -1,20 +1,11 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import { CoursesProvider } from "@/app/context/CourseContext";
 import { InstancesProvider } from "@/app/context/InstanceContext";
 import { Toaster } from "sonner";
 import CourseTabs from "./components/Tabs";
 import "./globals.css";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+import { ThemeProvider } from "@/components/ui/ThemeProvider";
+import { ToastProvider } from "./components/ToastProvider";
 
 export const metadata: Metadata = {
   title: "IIT IAA UI",
@@ -27,15 +18,24 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className="flex flex-col gap-4 max-w-xl mx-auto p-4">
-        <CoursesProvider>
-          <InstancesProvider>
-            <CourseTabs />
-            {children}
-            <Toaster />
-          </InstancesProvider>
-        </CoursesProvider>
+    <html lang="en" suppressHydrationWarning>
+      <body>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <CourseTabs />
+          <CoursesProvider>
+            <InstancesProvider>
+              <div className="flex flex-col gap-4 max-w-xl mx-auto p-4">
+                {children}
+              </div>
+              <ToastProvider />
+            </InstancesProvider>
+          </CoursesProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

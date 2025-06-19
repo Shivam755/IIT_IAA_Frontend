@@ -7,7 +7,8 @@ const nextConfig: NextConfig = {
   output: "standalone",
   watchOptions: {
     pollIntervalMs:1000
-  }
+  },
+  devIndicators: false
 };
 
 export default nextConfig;

@@ -72,8 +72,8 @@ const CreateCourseForm = () => {
   };
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <div className="flex flex-end">
-        <Button variant="outline" onClick={() => setOpen(true)}>
+      <div className="flex">
+        <Button className="flex-end" onClick={() => setOpen(true)}>
           Add Course
         </Button>
       </div>

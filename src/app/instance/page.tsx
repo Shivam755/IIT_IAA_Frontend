@@ -5,7 +5,7 @@ import GetInstanceForm from "@/app/components/GetInstanceForm";
 
 const InstancesPage = () => {
   return (
-    <div className="max-w-5xl mx-auto mt-4 space-y-6">
+    <div className="max-w-5xl h-fit mx-auto mt-4 space-y-6">
       <CreateInstanceForm />
       <GetInstanceForm />
       <InstanceTable />
