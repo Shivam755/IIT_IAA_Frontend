@@ -53,10 +53,6 @@ input{
   border:var(--foreground) 1px solid;
 } */
 
-input {
-  border: black 1px solid;
-}
-
 :root {
   --radius: 0.625rem;
   --background: oklch(1 0 0);

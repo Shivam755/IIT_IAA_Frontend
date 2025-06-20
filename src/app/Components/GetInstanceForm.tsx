@@ -40,7 +40,7 @@ const GetInstanceForm = () => {
   };
   return (
     <div className="flex flex-col gap-4 max-w-5xl min-w-xl p-4 border rounded-md">
-      <InstanceInputFields formData={formData} setFormData={setFormData} />
+      <InstanceInputFields formData={formData} setFormData={setFormData} dropDownNeeded={false} />
       <div className="pt-5">
         <Button onClick={handleSubmit} type="submit">
           Fetch Instances

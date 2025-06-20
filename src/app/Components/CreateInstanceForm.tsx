@@ -74,7 +74,7 @@ const CreateInstanceForm = () => {
             when you&apos;re done.
           </DialogDescription>
         </DialogHeader>
-        <InstanceInputFields formData={formData} setFormData={setFormData} />
+        <InstanceInputFields formData={formData} setFormData={setFormData} dropDownNeeded={true}/>
         <DialogFooter>
           <DialogClose asChild>
             <Button variant="outline">Cancel</Button>

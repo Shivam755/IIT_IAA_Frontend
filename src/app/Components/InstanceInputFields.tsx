@@ -9,9 +9,11 @@ import CourseViewDTO from "../models/CourseViewDTO";
 const InstanceInputFields = ({
   formData,
   setFormData,
+  dropDownNeeded = true
 }: {
   formData: InstanceCreateDTO;
   setFormData: React.Dispatch<React.SetStateAction<InstanceCreateDTO>>;
+  dropDownNeeded: boolean
 }) => {
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -33,7 +35,9 @@ const InstanceInputFields = ({
 
   return (
     <div className="grid gap-4">
-      <CoursesDropdown multi={false} onChange={CourseSelectChange} label="Course"/>
+      {
+        dropDownNeeded ? <CoursesDropdown multi={false} onChange={CourseSelectChange} label="Course"/> : null
+      }
       <div className="grid gap-3">
         <Label htmlFor="year">Year</Label>
         <Input
