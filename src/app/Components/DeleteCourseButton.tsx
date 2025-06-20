@@ -7,7 +7,7 @@ import Response from "@/app/models/Response";
 import { Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-const DeleteCourseButton = ({ id }: { id: number }) => {
+const DeleteCourseButton = ({ id, disabled }: { id: number, disabled:boolean }) => {
   const { refetchCourses } = useCourses();
   const DeleteCourse = async () => {
     let response: Promise<Response<void>> = deleteCourse(id);
@@ -25,7 +25,7 @@ const DeleteCourseButton = ({ id }: { id: number }) => {
     });
   };
   return (
-    <Button onClick={DeleteCourse}>
+    <Button onClick={DeleteCourse} disabled={disabled}>
       <Trash2 />
     </Button>
   );

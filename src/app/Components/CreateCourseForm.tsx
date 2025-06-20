@@ -18,14 +18,18 @@ import { CreateCourse } from "@/app/services/CourseService";
 import { useCourses } from "@/app/context/CourseContext";
 import CourseViewDTO from "@/app/models/CourseViewDTO";
 import Response from "@/app/models/Response";
+import CoursesDropdown from "./CoursesDropdown";
 
 const CreateCourseForm = () => {
   const [open, setOpen] = useState(false);
-  const [formData, setFormData] = useState<CourseCreateDTO>({
+  const emptyForm:CourseCreateDTO = {
     title: "",
     course_code: "",
     description: "",
-  });
+    prerequisites: [],
+    dependent_courses: []
+  };
+  const [formData, setFormData] = useState<CourseCreateDTO>(emptyForm);
 
   const { refetchCourses } = useCourses();
 
@@ -35,6 +39,16 @@ const CreateCourseForm = () => {
       [e.target.name]: e.target.value,
     });
   };
+
+  const CourseSelectChange = (course:CourseViewDTO | CourseViewDTO[]) =>{
+      if (Array.isArray(course)){
+        const selectedIds = course.map(i => i.id);
+        setFormData({
+          ...formData,
+          prerequisites: selectedIds
+        });
+      }
+    }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -55,11 +69,7 @@ const CreateCourseForm = () => {
       success: (data: Response<CourseViewDTO | undefined>) => {
         if (data.success) {
           // clearing fields
-          setFormData({
-            title: "",
-            course_code: "",
-            description: "",
-          });
+          setFormData(emptyForm);
           // refreshing
           refetchCourses();
           setOpen(false);
@@ -85,7 +95,7 @@ const CreateCourseForm = () => {
             you&apos;re done.
           </DialogDescription>
         </DialogHeader>
-        <form>
+        <div>
           <div className="grid gap-4">
             <div className="grid gap-3">
               <Label htmlFor="title">Course Name</Label>
@@ -118,7 +128,8 @@ const CreateCourseForm = () => {
               />
             </div>
           </div>
-        </form>
+          <CoursesDropdown multi={true} onChange={CourseSelectChange} label="Pre-Requisite" />
+        </div>
         <DialogFooter>
           <DialogClose asChild>
             <Button variant="outline">Cancel</Button>

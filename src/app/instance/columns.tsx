@@ -4,6 +4,13 @@ import InstanceViewDTO from "@/app/models/InstanceViewDTO";
 import DeleteInstanceButton from "../components/DeleteInstanceButton";
 import CourseViewDTO from "@/app/models/CourseViewDTO";
 import DeleteCourseButton from "@/app/components/DeleteCourseButton";
+import { useCourses } from "@/app/context/CourseContext";
+
+let courseList: CourseViewDTO[] =[]
+const settingCourseTitles = () =>{
+  const { courses } = useCourses();
+  courseList = courses;
+}
 
 export const InstanceColumns: ColumnDef<InstanceViewDTO>[] = [
   {
@@ -79,10 +86,37 @@ export const CourseColumns: ColumnDef<CourseViewDTO>[] = [
     ),
   },
   {
+    accessorKey: "prerequisites",
+    header: "Pre-Requisite Courses",
+    cell: ({ row }) => {
+      let course = row.original;
+      settingCourseTitles();
+      let selectedCourses = course.prerequisites
+        .map((id) => {
+          return courseList.find((x) => x.id === id)?.title;
+        })
+        .join(",");
+      return (
+        <div
+          title={selectedCourses} // optional tooltip on hover
+          className="max-w-[200px] truncate overflow-hidden text-ellipsis whitespace-nowrap"
+        >
+          {selectedCourses === "" ? "-" : selectedCourses}
+        </div>
+      );
+    },
+  },
+  {
     id: "actions",
     cell: ({ row }) => {
       let course = row.original;
-      return <DeleteCourseButton id={course.id} />;
+      let disabled = course.dependent_courses.length !== 0;
+      return (
+        <DeleteCourseButton
+          disabled={disabled}
+          id={course.id}
+        />
+      );
     },
   },
 ];
